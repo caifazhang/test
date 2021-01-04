@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <title>Document</title>
+  <style>
+    ul,
+    ol {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .wraper {
+      width: 900px;
+      height: 500px;
+      margin: 50px auto;
+      position: relative;
+      display: flex;
+    }
+
+    .banner {
+      flex:0 0 900px;
+      height: 500px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    ul {
+      width: 5400px;
+      height: 500px;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    li {
+      width: 900px;
+      height: 500px;
+      float: left;
+      position: relative;
+    }
+
+    li span {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 50px;
+      border: 2px solid red;
+      border-radius: 50%;
+      line-height: 50px;
+      text-align: center;
+      font-size: 28px;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+
+    img {
+      /* width: 900px; */
+      height: 500px;
+      max-width: 900px;
+      display: block;
+      background-size: cover;
+    }
+
+    .point {
+      width: 200px;
+      height: 21px;
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%)
+    }
+
+    ol {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    ol li {
+      width: 20px;
+      height: 20px;
+      background-color: #efeff2;
+      border: 1px solid gray;
+      border-radius: 50%;
+    }
+
+    ol li.active {
+      background-color: gray;
+    }
+
+    .btn-left,
+    .btn-right {
+      width: 60px;
+      height: 60px;
+      background-color: rgba(255, 255, 255, 0.3);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: center;
+      line-height: 60px;
+    }
+
+    .btn-left {
+      left: 0;
+    }
+
+    .btn-right {
+      right: 0;
+    }
+
+    .wraper:hover .btn-left,
+    .wraper:hover .btn-right {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .icon {
+      display: inline-block;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      border-bottom: 2px solid gray;
+    }
+
+    .btn-left .icon {
+      border-left: 2px solid gray;
+      transform: rotate(45deg);
+    }
+
+    .btn-right .icon {
+      border-right: 2px solid gray;
+      transform: rotate(-45deg);
+    }
+
+    .jumbotron {
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 轮播图容器 -->
+  <div class="jumbotron">
+    <div class="wraper">
+
+      <!-- 轮播图banner -->
+      <div class="banner">
+        <ul>
+          <li><span>1</span><img src="./images/alex-hall-SS-d4nMNwiQ-unsplash-p-500.jpeg" alt="" width="240"></li>
+          <li><span>2</span><img src="./images/恒压超薄白光-p-500.png" alt=""></li>
+          <li><span>3</span><img src="./images/kiefer-likens-StTKQq_cAQM-unsplash-p-500.jpeg" alt=""></li>
+          <li><span>4</span><img src="./images/Untitled-1-p-500.png" alt=""></li>
+          <li><span>5</span><img src="./images/sidekix-media-L6-yKzsrJzE-unsplash-p-1080.jpeg" alt=""></li>
+  
+          <li><span>1</span><img src="./images/alex-hall-SS-d4nMNwiQ-unsplash-p-500.jpeg" alt=""></li>
+        </ul>
+      </div>
+  
+      <!-- 小圆点 -->
+      <div class="point">
+        <ol>
+          <li class="active"></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ol>
+      </div>
+  
+      <!-- 按钮 -->
+      <div class="handle">
+        <div class="btn-left"><span class="icon"></span></div>
+        <div class="btn-right"><span class="icon"></span></div>
+      </div>
+  
+    </div>
+  </div>
+
+  <script src="./animate.js"></script>
+  <script>
+    var wElement = document.getElementsByClassName("wraper")[0];
+    var wPoint = document.getElementsByClassName("point")[0];
+    var btnLeft = document.getElementsByClassName("btn-left")[0];
+    var btnRight = document.getElementsByClassName("btn-right")[0];
+
+    var ulElement = document.getElementsByTagName("ul")[0];
+    var liElements = ulElement.getElementsByTagName("li");
+    var spanElements = ulElement.getElementsByTagName("span");
+    var pointElements = wPoint.getElementsByTagName("li")
+    console.log(spanElements);
+
+    // 定义每张图片的宽度
+    var width = liElements[0].offsetWidth;
+
+    // 定义图片的索引值
+    var index = 0;
+    // 定义导航点的索引值
+    var square = 0;
+
+    // 定时器变量
+    var timer = null;
+
+    // 单独设置第一个span元素显示
+    setTimeout(function() {
+        spanElements[0].style.opacity = 1;
+      },1500)
+
+    // 定义公共函数
+    // 设置导航点函数
+    var setPropagation = function (key) {
+      for (var i = 0; i < pointElements.length; i++) {
+        // 移除所有导航点的类名
+        pointElements[i].classList.remove('active');
+        spanElements[i].style.opacity = 0;
+      }
+      // 添加所有导航点的类名
+      pointElements[key].classList.add("active");
+
+      setTimeout(function() {
+        spanElements[0].style.opacity = 1;
+      },1500)
+
+      setTimeout(function() {
+        spanElements[key].style.opacity = 1;
+      },1500)
+    }
+
+    // 设置索引值的函数
+    var autoPlay = function () {
+      index++;
+      square++;
+
+      square = square > (pointElements.length - 1) ? 0 : square;
+      setPropagation(square);
+
+      setTimeout(function() {
+        spanElements[index].style.opacity = 1;
+      },1500)
+
+      if (index > (liElements.length - 1)) {
+        index = 1;
+        ulElement.style.left = "0px";
+      }
+
+      // 设置ul的位置
+      aniamte(ulElement, {
+        left: -(index * width)
+      }, 5);
+    };
+    // 执行定时器
+    timer = setInterval(autoPlay, 3000);
+
+    // 鼠标移入，停止轮播
+    wElement.onmouseenter = function() {
+      clearInterval(timer);
+    }
+
+    // 鼠标移开，继续轮播
+    wElement.onmouseleave = function() {
+      clearInterval(timer);
+      timer = setInterval(autoPlay ,3000);
+    }
+
+    btnLeft.onclick = function() {
+      index --;
+      square --;
+
+      square = square < 0 ? pointElements.length -1 : square;
+      setPropagation(square);
+
+      if(index < 0) {
+        index = liElements.length - 2;
+        ulElement.style.left = "-4500px";
+      }
+      aniamte(ulElement, {left: -(index * width)}, 5);
+    }
+
+    btnRight.onclick = function() {
+      index ++;
+      square ++;
+      square = square > pointElements.length - 1 ? 0 : square;
+      setPropagation(square);
+
+      if(index > liElements.length -1) {
+        index = 1;
+        ulElement.style.left = "0px";
+      }
+      aniamte(ulElement , {left: -(index * width)},5);
+    }
+
+    // 点击导航点实现切换
+    for(var j = 0 ; j < pointElements.length; j++) {
+      pointElements[j].index = j;
+      
+      pointElements[j].onclick = function() {
+        index = this.index;
+        square = this.index;
+        setPropagation(square);
+
+        aniamte(ulElement, {left: -(index * width)},5);
+      }
+    }
+
+    console.log(width);
+  </script>
+
+</body>
+
+</html>
